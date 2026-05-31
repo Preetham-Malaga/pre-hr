@@ -1,5 +1,3 @@
-// src/pages/LeaveManagement.tsx
-
 import { useState, useMemo } from 'react'
 import { useLeaveRequests, useLeaveTypes, useApplyLeave, useUpdateLeaveStatus, useCancelLeave, useUpdateLeaveRequest } from '../hooks/useLeave'
 import { useEmployees } from '../hooks/useEmployee'
@@ -12,7 +10,8 @@ type TabType = 'all' | 'pending' | 'approved' | 'rejected'
 export default function LeaveManagement() {
   const { data: requests = [], isLoading, isError } = useLeaveRequests()
   const { data: leaveTypes = [] } = useLeaveTypes()
-  const { data: employees = [] } = useEmployees()
+  const { data: employees } = useEmployees()
+const employeeList = employees ?? []
   const applyLeave = useApplyLeave()
   const updateStatus = useUpdateLeaveStatus()
   const cancelLeave = useCancelLeave()
@@ -144,7 +143,7 @@ export default function LeaveManagement() {
                 <select required value={form.employee_id} onChange={e => setForm(f => ({...f, employee_id: e.target.value}))}
                   className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="">— Select Employee —</option>
-                  {employees.map(e => <option key={e.id} value={e.id}>{e.first_name} {e.last_name} ({e.employee_id})</option>)}
+                  {employeeList.map((e: any) =><option key={e.id} value={e.id}>{e.first_name} {e.last_name} ({e.employee_id})</option>)}
                 </select>
               </div>
               <div>

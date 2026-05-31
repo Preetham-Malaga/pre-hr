@@ -1,5 +1,3 @@
-// src/hooks/useEmployee.ts
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import type { Employee, EmployeeUpdate } from '../types/employee'
@@ -27,7 +25,7 @@ export function useEmployees() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('employees')
-        .select('id, employee_id, first_name, last_name, email, employment_status, departments(department_name)')
+        .select('*')
         .order('created_at', { ascending: false })
       if (error) throw error
       return data

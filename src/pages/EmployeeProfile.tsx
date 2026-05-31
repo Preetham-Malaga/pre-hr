@@ -1,5 +1,3 @@
-// src/pages/EmployeeProfile.tsx
-
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEmployee, useUpdateEmployee, useEmployeeDocuments, useUploadDocument, useDeleteDocument, useEmployees } from '../hooks/useEmployee'
@@ -15,7 +13,8 @@ export default function EmployeeProfile() {
   const { data: docs = [] } = useEmployeeDocuments(id!)
   const { data: departments = [] } = useDepartments()
   const { data: designations = [] } = useDesignations()
-  const { data: allEmployees = [] } = useEmployees()
+  const { data: allEmployees } = useEmployees()
+const employeeList = allEmployees ?? []
   const updateMutation = useUpdateEmployee()
   const uploadMutation = useUploadDocument(id!)
   const deleteMutation = useDeleteDocument(id!)
@@ -156,7 +155,8 @@ export default function EmployeeProfile() {
                 <select value={form.reporting_manager ?? ''} onChange={e => setForm(f => ({...f, reporting_manager: e.target.value || null}))}
                   className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="">— Select —</option>
-                  {allEmployees.filter(e => e.id !== id).map(e => <option key={e.id} value={e.id}>{e.first_name} {e.last_name}</option>)}
+                  {employeeList.filter((e: any) => e.id !== id)
+                  .map(e => <option key={e.id} value={e.id}>{e.first_name} {e.last_name}</option>)}
                 </select>
               </div>
               <div>

@@ -1,6 +1,6 @@
 import { Header }   from '../components/layout/Header';
 import { useTheme } from '../context/ThemeContext';
-import { COLOR_PRESETS, type ColorPreset } from '../theme/theme';
+import {  type ColorPreset } from '../theme/theme';
 import { Sun, Moon, Monitor, Check, Palette } from 'lucide-react';
 
 const THEME_OPTIONS = [

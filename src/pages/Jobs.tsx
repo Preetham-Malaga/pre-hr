@@ -31,7 +31,7 @@ export default function Jobs() {
   const [search, setSearch] =
     useState("");
 
-  const [page, setPage] =
+  const [page] = useState(1);
     useState(1);
 
   const [open, setOpen] =
@@ -56,12 +56,6 @@ export default function Jobs() {
     useDeleteJob();
 
   const jobs = data ?? [];
-
-  const totalPages =
-    Math.ceil(
-      jobs.length /
-        PAGE_SIZE
-    ) || 1;
 
   const paginated =
     useMemo(() => {
@@ -407,7 +401,7 @@ export default function Jobs() {
               </button>
 
               <button
-                type="submit"
+              type="submit"
                 className="px-4 py-2 rounded-lg text-white"
                 style={{
                   background:

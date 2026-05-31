@@ -1,5 +1,3 @@
-// src/types/employee.ts
-
 export interface Employee {
   id: string
   employee_id: string

@@ -20,7 +20,9 @@ function toAuthUser(user: User): AuthUser {
   const meta = user.user_metadata ?? {};
   const firstName = meta.first_name ?? '';
   const lastName  = meta.last_name  ?? '';
-  const name = (firstName + ' ' + lastName).trim() || user.email?.split('@')[0] ?? 'User';
+ const name =
+  (firstName + ' ' + lastName).trim() ||
+  (user.email?.split('@')[0] ?? 'User');
   return { id: user.id, name, email: user.email ?? '', role: meta.role ?? 'Admin', avatar: meta.avatar_url ?? '' };
 }
 
