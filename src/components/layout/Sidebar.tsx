@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -8,9 +9,9 @@ import {
   Settings,
   X,
   Briefcase,
-  ShieldCheck,
   CalendarOff,
   CalendarCheck,
+  Calendar,
 } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
@@ -24,56 +25,123 @@ interface SidebarProps {
 
 const NAV = [
   {
+    label: "Dashboard",
     to: "/dashboard",
     icon: LayoutDashboard,
-    label: "Dashboard",
-  },
-  {
-  to: "/jobs",
-  icon: BriefcaseBusiness,
-  label: "Recruitment",
-},
-  {
-    to: "/employees",
-    icon: Users,
-    label: "Employees",
-  },
-  {
-    to: "/attendance",
-    icon: CalendarCheck,
-    label: "Attendance",
-  },
-  {
-    to: "/departments",
-    icon: Building2,
-    label: "Departments",
-  },
-  {
-    to: "/designations",
-    icon: Briefcase,
-    label: "Designations",
-  },
-  {
-    to: "/roles-permissions",
-    icon: ShieldCheck,
-    label: "Roles & Permissions",
-  },
-  {
-    to: "/leave",
-    icon: CalendarOff,
-    label: "Leave Management",
-  },
-  {
-    to: "/Holidays",
-    icon: BriefcaseBusiness,
-    label: "Holidays",
-  },
-  {
-    to: "/settings",
-    icon: Settings,
-    label: "Settings",
   },
 
+  {
+    label: "Employees",
+    to: "/employees",
+    icon: Users,
+  },
+
+  {
+    label: "Attendance",
+    to: "/attendance",
+    icon: CalendarCheck,
+  },
+
+  {
+    label: "Leave Management",
+    icon: CalendarOff,
+    children: [
+      {
+        label: "Leave Types",
+        to: "/leave-types",
+      },
+      {
+        label: "Leave Balances",
+        to: "/leave-balances",
+      },
+      {
+        label: "Leave Apply",
+        to: "/leave-apply",
+      },
+      {
+        label: "Leave Approval",
+        to: "/leave-approval",
+      },
+      {
+        label: "Leave Requests",
+        to: "/leave-requests",
+      },
+      {
+        label: "Leave Calendar",
+        to: "/leave-calendar",
+      },
+    ],
+  },
+
+  {
+    label: "Organization",
+    icon: Building2,
+    children: [
+      {
+        label: "Departments",
+        to: "/departments",
+      },
+      {
+        label: "Designations",
+        to: "/designations",
+      },
+      {
+        label: "Roles & Permissions",
+        to: "/roles-permissions",
+      },
+    ],
+  },
+
+  {
+    label: "Recruitment",
+    icon: BriefcaseBusiness,
+    children: [
+      {
+        label: "Candidates",
+        to: "/candidates",
+      },
+      {
+        label: "Interviews",
+        to: "/interviews",
+      },
+      {
+        label: "Offers",
+        to: "/offers",
+      },
+    ],
+  },
+
+  {
+    label: "Payroll",
+    icon: Briefcase,
+    children: [
+      {
+        label: "Payroll",
+        to: "/payroll",
+      },
+      {
+        label: "Payslips",
+        to: "/payslips",
+      },
+    ],
+  },
+
+  {
+    label: "Holiday Management",
+    icon: Calendar,
+    children: [
+      {
+        label: "Holidays",
+        to: "/holidays",
+      },
+    ],
+  },
+
+  {
+    label: "Settings",
+    to: "/settings",
+    icon: Settings,
+  },
 ];
 
 export function Sidebar({
@@ -83,6 +151,8 @@ export function Sidebar({
   const { user, logout } = useAuth();
 
   const navigate = useNavigate();
+  const [openMenu, setOpenMenu] =
+  useState<string | null>(null);
 
   const handleLogout = async () => {
     await logout();
@@ -147,58 +217,83 @@ export function Sidebar({
         </p>
 
         <div className="space-y-1">
-          {NAV.map(
-            ({ to, icon: Icon, label }) => (
-              <NavLink
-                key={to}
-                to={to}
-                onClick={onClose}
-                className={({ isActive }) =>
-                  `
-                  flex items-center gap-3
-                  px-3 py-2.5 rounded-lg
-                  text-sm font-medium
-                  transition-all duration-150
-                  ${
-                    isActive
-                      ? "dark:text-blue-300 text-blue-700"
-                      : "dark:text-slate-400 text-slate-600 dark:hover:text-slate-100 hover:text-slate-900 dark:hover:bg-slate-700/50 hover:bg-slate-100"
-                  }
-                `
-                }
-                style={({ isActive }) =>
-                  isActive
-                    ? {
-                        backgroundColor:
-                          "color-mix(in srgb, var(--color-primary) 15%, transparent)",
-                        color:
-                          "var(--color-primary)",
-                      }
-                    : {}
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <Icon size={16} />
+         {NAV.map((item) => {
+  const Icon = item.icon;
 
-                    <span className="flex-1">
-                      {label}
-                    </span>
-
-                    {isActive && (
-                      <ChevronRight
-                        size={14}
-                        style={{
-                          color:
-                            "var(--color-primary)",
-                        }}
-                      />
-                    )}
-                  </>
-                )}
-              </NavLink>
+  if (item.children) {
+    return (
+      <div key={item.label}>
+        <button
+          onClick={() =>
+            setOpenMenu(
+              openMenu === item.label
+                ? null
+                : item.label
             )
-          )}
+          }
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700"
+        >
+          <Icon size={16} />
+
+          <span className="flex-1 text-left">
+            {item.label}
+          </span>
+
+          <ChevronRight
+            size={14}
+            className={`transition-transform ${
+              openMenu === item.label
+                ? "rotate-90"
+                : ""
+            }`}
+          />
+        </button>
+
+        {openMenu === item.label && (
+          <div className="ml-6 mt-1 space-y-1">
+            {item.children.map(
+              (child) => (
+                <NavLink
+                  key={child.to}
+                  to={child.to}
+                  className="block px-3 py-2 text-sm rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"
+                >
+                  {child.label}
+                </NavLink>
+              )
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <NavLink
+      key={item.to}
+      to={item.to!}
+      onClick={onClose}
+      className={({ isActive }) =>
+        `
+        flex items-center gap-3
+        px-3 py-2.5 rounded-lg
+        text-sm font-medium
+        ${
+          isActive
+            ? "text-blue-600"
+            : "text-slate-600"
+        }
+      `
+      }
+    >
+      <Icon size={16} />
+
+      <span className="flex-1">
+        {item.label}
+      </span>
+    </NavLink>
+  );
+})}
         </div>
       </nav>
 

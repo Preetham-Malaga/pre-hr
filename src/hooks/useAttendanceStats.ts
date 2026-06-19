@@ -3,49 +3,65 @@ import { supabase } from "../lib/supabase";
 
 export function useAttendanceStats() {
   return useQuery({
-    queryKey: ["attendance-stats"],
+    queryKey: [
+      "attendance-stats",
+    ],
+
+    staleTime:
+      1000 * 60 * 5,
 
     queryFn: async () => {
-      const { data, error } =
-        await supabase
-          .from("attendance")
-          .select("*");
+      const {
+        data,
+        error,
+      } = await supabase
+        .from(
+          "attendance"
+        )
+        .select(
+          "status"
+        );
 
-      if (error) throw error;
-
-      const totalRecords =
-        data.length;
+      if (error)
+        throw error;
 
       const present =
-        data.filter(
-          (x) =>
+        data?.filter(
+          (
+            x
+          ) =>
             x.status ===
             "Present"
-        ).length;
+        ).length || 0;
 
       const absent =
-        data.filter(
-          (x) =>
+        data?.filter(
+          (
+            x
+          ) =>
             x.status ===
             "Absent"
-        ).length;
+        ).length || 0;
 
       const leave =
-        data.filter(
-          (x) =>
+        data?.filter(
+          (
+            x
+          ) =>
             x.status ===
             "Leave"
-        ).length;
+        ).length || 0;
 
       const halfDay =
-        data.filter(
-          (x) =>
+        data?.filter(
+          (
+            x
+          ) =>
             x.status ===
             "Half Day"
-        ).length;
+        ).length || 0;
 
       return {
-        totalRecords,
         present,
         absent,
         leave,

@@ -1,33 +1,7 @@
-export type Role =
-  | "Admin"
-  | "HR"
-  | "Manager"
-  | "Employee";
-
 export type Status =
   | "Active"
   | "Inactive"
   | "On Leave";
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: Role;
-  department: string;
-  status: Status;
-  avatar: string;
-  joinDate: string;
-  phone: string;
-}
-
-export interface AuthUser {
-  id: string;
-  name: string;
-  email: string;
-  role: Role;
-  avatar: string;
-}
 
 export interface Employee {
   id: string;
@@ -42,7 +16,6 @@ export interface Employee {
   status: Status;
   created_at: string;
 }
-
 export const empFullName = (
   employee: Employee
 ) =>

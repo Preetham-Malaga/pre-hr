@@ -22,12 +22,17 @@ export function useEmployee(id: string) {
 export function useEmployees() {
   return useQuery<Employee[]>({
     queryKey: ['employees'],
+    staleTime: 1000 * 60 * 5,
     queryFn: async () => {
       const { data, error } = await supabase
         .from('employees')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('created_at', {
+          ascending: false
+        })
+
       if (error) throw error
+
       return data
     },
   })

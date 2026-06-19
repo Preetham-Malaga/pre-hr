@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import { Plus, Search, Pencil, Trash2, Filter, ChevronUp, ChevronDown, Loader2, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Header }        from '../components/layout/Header';
 import { StatusBadge }   from '../components/ui/Badge';
@@ -27,9 +28,30 @@ export default function EmployeesPage() {
   const [editEmp,      setEditEmp]      = useState<Employee | null>(null);
   const [deleteId,     setDeleteId]     = useState<string | null>(null);
   const [saving,       setSaving]       = useState(false);
-
+  const [nextEmployeeId, setNextEmployeeId] = useState("EMP-001");
   const deleteTarget = users.find(u => u.id === deleteId);
 
+ const loadNextEmployeeId = async () => {
+  const { data } = await supabase
+    .from("employees")
+    .select("employee_id")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (data?.employee_id) {
+    const lastNumber = parseInt(
+      data.employee_id.replace("EMP-", "")
+    );
+
+    setNextEmployeeId(
+      `EMP-${String(lastNumber + 1).padStart(3, "0")}`
+    );
+  }
+};
+useEffect(() => {
+  loadNextEmployeeId();
+}, []);
   const filtered = useMemo(() => users
     .filter(u => {
       const q = search.toLowerCase();
@@ -155,14 +177,18 @@ export default function EmployeesPage() {
                   ) : paginated.map(emp => (
                     <tr key={emp.id} className="table-row-hover">
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-3">
-                          <Avatar name={empFullName(emp)} size="sm" />
-                          <div className="min-w-0">
-                            <p className="font-medium dark:text-slate-200 text-slate-800 truncate">{empFullName(emp)}</p>
-                            <p className="text-xs dark:text-slate-500 text-slate-500 truncate">{emp.email}</p>
-                          </div>
-                        </div>
-                      </td>
+<div className="min-w-0">
+  <p className="font-medium dark:text-slate-200 text-slate-800 truncate">
+    {emp.employee_id}
+  </p>
+  <p className="text-sm dark:text-slate-300 text-slate-700 truncate">
+    {empFullName(emp)}
+  </p>
+  <p className="text-xs dark:text-slate-500 text-slate-500 truncate">
+    {emp.email}
+  </p>
+</div>                   
+   </td>
                       <td className="px-4 py-3 dark:text-slate-400 text-slate-600 text-xs">{emp.department}</td>
                       <td className="px-4 py-3 dark:text-slate-400 text-slate-600 text-xs">{emp.designation}</td>
                       <td className="px-4 py-3"><StatusBadge status={emp.status} /></td>
@@ -218,15 +244,36 @@ export default function EmployeesPage() {
         </div>
       </div>
 
-      <Modal open={addOpen} onClose={() => setAddOpen(false)} title="Add New Employee" width="max-w-2xl">
-        <EmployeeForm onSubmit={handleAdd} onCancel={() => setAddOpen(false)} submitLabel="Add Employee" saving={saving} />
-      </Modal>
-
-      <Modal open={!!editEmp} onClose={() => setEditEmp(null)} title="Edit Employee" width="max-w-2xl">
-        {editEmp && (
-          <EmployeeForm initial={editEmp} onSubmit={handleEdit} onCancel={() => setEditEmp(null)} submitLabel="Save Changes" saving={saving} />
-        )}
-      </Modal>
+<Modal
+  open={addOpen}
+  onClose={() => setAddOpen(false)}
+  title="Add New Employee"
+  width="max-w-2xl"
+>
+  <EmployeeForm
+    nextEmployeeId={nextEmployeeId}
+    onSubmit={handleAdd}
+    onCancel={() => setAddOpen(false)}
+    submitLabel="Add Employee"
+    saving={saving}
+  />
+</Modal>
+<Modal
+  open={!!editEmp}
+  onClose={() => setEditEmp(null)}
+  title="Edit Employee"
+  width="max-w-2xl"
+>
+  {editEmp && (
+    <EmployeeForm
+      initial={editEmp}
+      onSubmit={handleEdit}
+      onCancel={() => setEditEmp(null)}
+      submitLabel="Save Changes"
+      saving={saving}
+    />
+  )}
+</Modal>
 
       <ConfirmDialog open={!!deleteId} onClose={() => setDeleteId(null)} onConfirm={handleDelete}
         title="Delete Employee"

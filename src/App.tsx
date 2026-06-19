@@ -15,7 +15,6 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 import DashboardPage from "./pages/DashboardPage";
 import EmployeesPage from "./pages/EmployeesPage";
-import AttendancePage from "./pages/Attendance";
 import SettingsPage from "./pages/SettingsPage";
 
 import Departments from "./pages/Departments";
@@ -25,6 +24,19 @@ import RolesPermissions from "./pages/RolesPermissions";
 import LeaveManagement from "./pages/LeaveManagement";
 import Holidays        from "./pages/Holidays";
 import Jobs             from "./pages/Jobs";
+import CandidatesPage   from "./pages/CandidatesPage";
+import InterviewsPage    from "./pages/InterviewsPage";
+import OffersPage from "./pages/OffersPage";
+import LeaveTypes from "./pages/LeaveTypes";  
+import LeaveRequests from "./pages/LeaveRequests";
+import LeaveBalances from "./pages/LeaveBalances";
+import LeaveApply from "./pages/LeaveApply";
+import LeaveApproval from "./pages/LeaveApproval";
+import LeaveCalendar from "./pages/LeaveCalendar";
+import Payroll from "./pages/Payroll";
+import Payslips from "./pages/Payslips";
+import Attendance from "./pages/Attendance";
+
 
 
 export default function App() {
@@ -59,10 +71,10 @@ export default function App() {
                       path="/employees"
                       element={<EmployeesPage />}
                     />
-
+            
                     <Route
                       path="/attendance"
-                      element={<AttendancePage />}
+                      element={<Attendance />}
                     />
 
                     <Route
@@ -89,7 +101,50 @@ export default function App() {
                       path="/leave"
                       element={<LeaveManagement />}
                     />
-
+                    <Route
+  path="/leave-balances"
+  element={<LeaveBalances />}
+/>
+                    <Route
+  path="/leave-types"
+  element={<LeaveTypes />}
+/>
+<Route
+  path="/leave-apply"
+  element={<LeaveApply />}
+/>
+<Route
+  path="/leave-approval"
+  element={<LeaveApproval />}
+/>
+<Route
+  path="/leave-calendar"
+  element={<LeaveCalendar />}
+/>
+                    <Route
+  path="/candidates"
+  element={<CandidatesPage />}
+/>
+<Route
+  path="/interviews"
+  element={<InterviewsPage />}
+/>
+<Route
+  path="/offers"
+  element={<OffersPage />}
+/>
+<Route
+  path="/payroll"
+  element={<Payroll />}
+/>
+<Route
+  path="/leave-requests"
+  element={<LeaveRequests />}
+/>
+<Route
+  path="/payslips"
+  element={<Payslips />}
+/>
                     <Route
                       path="/settings"
                       element={<SettingsPage />}

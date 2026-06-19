@@ -6,9 +6,9 @@ import {
 
 import { supabase } from "../lib/supabase";
 
-const QUERY_KEY = ["payroll"];
+const QUERY_KEY = ["payslips"];
 
-export function usePayroll() {
+export function usePayslips() {
   return useQuery({
     queryKey: QUERY_KEY,
 
@@ -17,9 +17,9 @@ export function usePayroll() {
     queryFn: async () => {
       const { data, error } =
         await supabase
-          .from("payroll")
+          .from("payslips")
           .select("*")
-          .order("created_at", {
+          .order("generated_date", {
             ascending: false,
           });
 
@@ -30,7 +30,7 @@ export function usePayroll() {
   });
 }
 
-export function useCreatePayroll() {
+export function useGeneratePayslip() {
   const qc =
     useQueryClient();
 
@@ -42,7 +42,7 @@ export function useCreatePayroll() {
         data,
         error,
       } = await supabase
-        .from("payroll")
+        .from("payslips")
         .insert(payload)
         .select()
         .single();
