@@ -36,6 +36,8 @@ import LeaveCalendar from "./pages/LeaveCalendar";
 import Payroll from "./pages/Payroll";
 import Payslips from "./pages/Payslips";
 import Attendance from "./pages/Attendance";
+import AddEmployee from "./pages/AddEmployee";
+
 
 
 
@@ -144,6 +146,10 @@ export default function App() {
 <Route
   path="/payslips"
   element={<Payslips />}
+/>
+<Route
+  path="/employees/new"
+  element={<AddEmployee />}
 />
                     <Route
                       path="/settings"

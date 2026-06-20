@@ -3,14 +3,13 @@ import { supabase } from '../lib/supabase';
 import { Plus, Search, Pencil, Trash2, Filter, ChevronUp, ChevronDown, Loader2, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Header }        from '../components/layout/Header';
 import { StatusBadge }   from '../components/ui/Badge';
-import { Avatar }        from '../components/ui/Avatar';
 import { Modal }         from '../components/ui/Modal';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { EmployeeForm }  from '../components/ui/EmployeeForm';
 import { useUsers }      from '../context/UsersContext';
 import { useToast }      from '../context/ToastContext';
 import { empFullName, type Employee, type Status } from '../types';
-
+import { useNavigate } from "react-router-dom";
 type SortKey = 'first_name' | 'email' | 'department' | 'designation' | 'status' | 'joining_date';
 const STATUSES: ('All' | Status)[] = ['All', 'Active', 'Inactive', 'On Leave'];
 const PAGE_SIZE = 10;
@@ -18,6 +17,7 @@ const PAGE_SIZE = 10;
 export default function EmployeesPage() {
   const { users, loading, addUser, updateUser, deleteUser } = useUsers();
   const toast = useToast();
+  const navigate = useNavigate();
 
   const [search,       setSearch]       = useState('');
   const [statusFilter, setStatusFilter] = useState<'All' | Status>('All');
@@ -30,7 +30,6 @@ export default function EmployeesPage() {
   const [saving,       setSaving]       = useState(false);
   const [nextEmployeeId, setNextEmployeeId] = useState("EMP-001");
   const deleteTarget = users.find(u => u.id === deleteId);
-
  const loadNextEmployeeId = async () => {
   const { data } = await supabase
     .from("employees")
@@ -49,9 +48,6 @@ export default function EmployeesPage() {
     );
   }
 };
-useEffect(() => {
-  loadNextEmployeeId();
-}, []);
   const filtered = useMemo(() => users
     .filter(u => {
       const q = search.toLowerCase();
@@ -133,7 +129,7 @@ useEffect(() => {
               </select>
             </div>
           </div>
-          <button className="btn-primary shrink-0 w-full sm:w-auto justify-center" onClick={() => setAddOpen(true)}>
+          <button className="btn-primary shrink-0 w-full sm:w-auto justify-center" onClick={() => navigate("/employees/new")}>
             <Plus size={15} />Add Employee
           </button>
         </div>

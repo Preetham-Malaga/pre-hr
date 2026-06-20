@@ -183,39 +183,103 @@ const employeeList = allEmployees ?? []
             </button>
           </div>
         </form>
-      ) : (
-        <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4">Personal Information</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {field('First Name', employee.first_name)}
-              {field('Last Name', employee.last_name)}
-              {field('Gender', employee.gender)}
-              {field('Date of Birth', employee.date_of_birth)}
-              {field('Marital Status', employee.marital_status)}
-            </div>
-          </div>
-          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4">Contact Information</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {field('Email', employee.email)}
-              {field('Phone', employee.phone)}
-              {field('Address', employee.address)}
-            </div>
-          </div>
-          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4">Employment Information</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {field('Employee ID', employee.employee_id)}
-              {field('Department', employee.departments?.department_name)}
-              {field('Designation', employee.designations?.designation_name)}
-              {field('Reporting Manager', employee.manager ? `${employee.manager.first_name} ${employee.manager.last_name}` : null)}
-              {field('Joining Date', employee.joining_date)}
-              {field('Employment Status', employee.employment_status)}
-            </div>
-          </div>
-        </div>
-      )}
+     ) : (
+  <div className="space-y-6">
+
+    {/* Personal Information */}
+    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+      <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
+        Personal Information
+      </h2>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {field("First Name", employee.first_name)}
+        {field("Middle Name", employee.middle_name)}
+        {field("Last Name", employee.last_name)}
+        {field("Gender", employee.gender)}
+        {field("Date of Birth", employee.date_of_birth)}
+        {field("Marital Status", employee.marital_status)}
+        {field("Blood Group", employee.blood_group)}
+        {field("Nationality", employee.nationality)}
+      </div>
+    </div>
+
+    {/* Contact Information */}
+    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+      <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
+        Contact Information
+      </h2>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {field("Official Email", employee.email)}
+        {field("Personal Email", employee.personal_email)}
+        {field("Official Phone", employee.phone)}
+        {field("Personal Phone", employee.personal_phone)}
+        {field("Address", employee.address)}
+      </div>
+    </div>
+
+    {/* Employment Information */}
+    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+      <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
+        Employment Information
+      </h2>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {field("Employee ID", employee.employee_id)}
+
+        {field(
+          "Department",
+          employee.departments?.department_name
+        )}
+
+        {field(
+          "Designation",
+          employee.designations?.designation_name
+        )}
+
+        {field(
+          "Reporting Manager",
+          employee.manager
+            ? `${employee.manager.first_name} ${employee.manager.last_name}`
+            : null
+        )}
+
+        {field(
+          "Joining Date",
+          employee.joining_date
+        )}
+
+        {field(
+          "Confirmation Date",
+          employee.confirmation_date
+        )}
+
+        {field(
+          "Employment Type",
+          employee.employment_type
+        )}
+
+        {field(
+          "Work Location",
+          employee.work_location
+        )}
+
+        {field(
+          "Employee Status",
+          employee.employee_status
+        )}
+
+        {field(
+          "System Status",
+          employee.employment_status
+        )}
+      </div>
+    </div>
+
+  </div>
+)
+}
 
       {/* Documents */}
       <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
