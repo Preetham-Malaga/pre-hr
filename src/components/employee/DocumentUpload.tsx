@@ -1,7 +1,13 @@
 import { useState } from "react";
 import SectionCard from "./SectionCard";
 
-export default function DocumentUpload() {
+interface DocumentUploadProps {
+  employeeId?: string;
+}
+
+export default function DocumentUpload({
+  employeeId,
+}: DocumentUploadProps) {
   const documents = [
     "Resume",
     "Aadhaar Card",

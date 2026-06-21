@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { useParams } from "react-router-dom";
 
 import PersonalInformation from "../components/employee/PersonalInformation";
 import ContactInformation from "../components/employee/ContactInformation";
 import EmploymentInformation from "../components/employee/EmploymentInformation";
 import DocumentUpload from "../components/employee/DocumentUpload";
 
-export default function AddEmployee() {
+export default function EditEmployee() {
   const navigate = useNavigate();
   const [profileImage, setProfileImage] = useState("");
   const [nextEmployeeId, setNextEmployeeId] = useState("Loading...");
+  const { id } = useParams();
 
   const [form, setForm] = useState({
    employee_id: "",
@@ -45,38 +47,28 @@ export default function AddEmployee() {
 
     employee_status: "Active",
   });
-  const loadNextEmployeeId = async () => {
-  const { data } = await supabase
+  const loadEmployee = async () => {
+  const { data, error } = await supabase
     .from("employees")
-    .select("employee_id")
-    .order("created_at", { ascending: false })
-    .limit(1)
+    .select("*")
+    .eq("id", id)
     .single();
 
-  if (data?.employee_id) {
-    const lastNumber = parseInt(
-      data.employee_id.replace("EMP-", "")
-    );
+  if (error) {
+    console.error(error);
+    return;
+  }
 
-    const nextId = `EMP-${String(lastNumber + 1).padStart(3, "0")}`;
-
-    setNextEmployeeId(nextId);
-
-    setForm((prev) => ({
-      ...prev,
-      employee_id: nextId,
-    }));
-  } else {
-    setForm((prev) => ({
-      ...prev,
-      employee_id: "EMP-001",
-    }));
+  if (data) {
+    setForm(data);
   }
 };
 
 useEffect(() => {
-  loadNextEmployeeId();
-}, []);
+  if (id) {
+    loadEmployee();
+  }
+}, [id]);
 
   const handleSave = async () => {
   try {
@@ -111,11 +103,10 @@ useEffect(() => {
     }
 
     const { data, error } = await supabase
-      .from("employees")
-      .insert([
-        {
-          employee_id: "Loading...",
-
+     .from("employees")
+.update({
+        
+          employee_id: form.employee_id,
           first_name: form.first_name,
           middle_name: form.middle_name,
           last_name: form.last_name,
@@ -150,10 +141,11 @@ useEffect(() => {
 
           employment_status: "active",
           status: "Active",
-        },
-      ])
-      .select()
-      .single();
+      }
+)
+.eq("id", id)
+.select()
+.single();
 
     if (error) {
       console.error(error);
@@ -177,11 +169,11 @@ useEffect(() => {
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
         <div>
           <h2 className="text-3xl font-bold text-slate-800 dark:text-white">
-            Add Employee
+            Edit Employee
           </h2>
 
           <p className="text-slate-500 mt-2">
-            Create employee profile
+            Update employee profile
           </p>
         </div>
       </div>
@@ -250,8 +242,7 @@ useEffect(() => {
         setForm={setForm}
       />
 
-      <DocumentUpload />
-
+     <DocumentUpload employeeId={id} />
       {/* Footer */}
       <div className="flex justify-end gap-3 pb-10">
         <button
@@ -265,7 +256,7 @@ useEffect(() => {
           onClick={handleSave}
           className="px-6 py-3 rounded-xl bg-[#363b6c] text-white"
         >
-          Save Employee
+        Update Employee
         </button>
       </div>
     </div>

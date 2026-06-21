@@ -38,9 +38,9 @@ export default function EmploymentInformation({
           <label className="block mb-2 text-sm font-medium">
             Employee ID
           </label>
-       <input
-  className="input bg-gray-100"
-  value={form.employee_id}
+      <input
+  className="input"
+ value={form.employee_id}
   readOnly
 />
         </div>
@@ -183,27 +183,6 @@ export default function EmploymentInformation({
             <option>Hybrid</option>
           </select>
         </div>
-<div>
-  <label className="block mb-2 text-sm font-medium">
-    Work Type
-  </label>
-
-  <select
-    className="input"
-    value={form.work_type}
-    onChange={(e) =>
-      setForm({
-        ...form,
-        work_type: e.target.value,
-      })
-    }
-  >
-    <option value="">Select Work Type</option>
-    <option value="Onsite">Onsite</option>
-    <option value="Remote">Remote</option>
-    <option value="Hybrid">Hybrid</option>
-  </select>
-</div>
         <div>
           <label className="block mb-2 text-sm font-medium">
             Confirmation Date

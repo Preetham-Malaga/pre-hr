@@ -58,12 +58,16 @@ export default function PersonalInformation({
           </label>
        <input
   type="date"
-  max={
-    new Date()
-      .toISOString()
-      .split("T")[0]
+  max={new Date().toISOString().split("T")[0]}
+  className="input border border-slate-300 rounded-xl px-3 py-2 w-full"
+  value={form.date_of_birth}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      date_of_birth: e.target.value,
+    })
   }
-          />
+/>
         </div>
 
         <div>

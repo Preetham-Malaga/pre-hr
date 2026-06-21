@@ -37,6 +37,8 @@ import Payroll from "./pages/Payroll";
 import Payslips from "./pages/Payslips";
 import Attendance from "./pages/Attendance";
 import AddEmployee from "./pages/AddEmployee";
+import EditEmployee from "./pages/EditEmployee";
+import ViewEmployee from "./pages/ViewEmployee";
 
 
 
@@ -151,6 +153,8 @@ export default function App() {
   path="/employees/new"
   element={<AddEmployee />}
 />
+<Route path="/employees/edit/:id" element={<EditEmployee />} />
+<Route path="/employees/view/:id" element={<ViewEmployee />} />
                     <Route
                       path="/settings"
                       element={<SettingsPage />}
