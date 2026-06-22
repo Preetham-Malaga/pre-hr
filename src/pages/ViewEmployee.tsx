@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { ArrowLeft } from "lucide-react";
 import PersonalInformation from "../components/employee/PersonalInformation";
 import ContactInformation from "../components/employee/ContactInformation";
 import EmploymentInformation from "../components/employee/EmploymentInformation";
@@ -8,6 +9,7 @@ import DocumentUpload from "../components/employee/DocumentUpload";
 
 export default function ViewEmployee() {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const [employee, setEmployee] = useState<any>(null);
     const [form, setForm] = useState<any>({});
@@ -50,9 +52,17 @@ export default function ViewEmployee() {
         );
     }
 
+
     return (
   <div className="p-6 space-y-6">
 
+    <button
+      onClick={() => navigate("/employees")}
+      className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg"
+    >
+      <ArrowLeft size={18} />
+      Back
+    </button>
     <PersonalInformation
       form={form}
       setForm={() => {}}

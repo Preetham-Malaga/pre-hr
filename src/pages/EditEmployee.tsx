@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 import PersonalInformation from "../components/employee/PersonalInformation";
 import ContactInformation from "../components/employee/ContactInformation";
@@ -166,17 +167,24 @@ useEffect(() => {
   return (
     <div className="p-6 w-full space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
-        <div>
-          <h2 className="text-3xl font-bold text-slate-800 dark:text-white">
-            Edit Employee
-          </h2>
+     <div className="flex items-center gap-4">
+  <button
+    onClick={() => navigate("/employees")}
+    className="p-2 rounded-lg border border-slate-300 hover:bg-slate-100"
+  >
+    <ArrowLeft size={20} />
+  </button>
 
-          <p className="text-slate-500 mt-2">
-            Update employee profile
-          </p>
-        </div>
-      </div>
+  <div>
+    <h2 className="text-3xl font-bold text-slate-800 dark:text-white">
+      Edit Employee
+    </h2>
+
+    <p className="text-slate-500 mt-1">
+      Update employee profile
+    </p>
+  </div>
+</div>
 
       {/* Profile Photo */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">

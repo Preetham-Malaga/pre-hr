@@ -3,10 +3,12 @@ import { Plus, Search, Pencil, Trash2, Filter, ChevronUp, ChevronDown, Loader2, 
 import { Header } from '../components/layout/Header';
 import { StatusBadge } from '../components/ui/Badge';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { Modal } from '../components/ui/Modal';
 import { useUsers } from '../context/UsersContext';
 import { useToast } from '../context/ToastContext';
 import { empFullName, type Employee, type Status } from '../types';
 import { useNavigate } from "react-router-dom";
+
 
 type SortKey = 'first_name' | 'email' | 'department' | 'designation' | 'status' | 'joining_date';
 const STATUSES: ('All' | Status)[] = ['All', 'Active', 'Inactive', 'On Leave'];
@@ -16,9 +18,18 @@ export default function EmployeesPage() {
   const { users, loading, deleteUser } = useUsers();
   const toast = useToast();
   const navigate = useNavigate();
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'All' | Status>('All');
+  const [departmentFilter, setDepartmentFilter] = useState("All");
+const [designationFilter, setDesignationFilter] = useState("All");
+const [employmentTypeFilter, setEmploymentTypeFilter] = useState("All");
+const [workTypeFilter, setWorkTypeFilter] = useState("All");
+const [genderFilter, setGenderFilter] = useState("All");
+const [maritalStatusFilter, setMaritalStatusFilter] = useState("All");
+const [employeeStatusFilter, setEmployeeStatusFilter] = useState("All");
+const [workLocationFilter, setWorkLocationFilter] = useState("All");
   const [sortKey, setSortKey] = useState<SortKey>('first_name');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const [page, setPage] = useState(1);
@@ -30,14 +41,32 @@ export default function EmployeesPage() {
       const q = search.toLowerCase();
       const name = empFullName(u).toLowerCase();
       const matchSearch = !q || name.includes(q) || u.email.toLowerCase().includes(q) || u.department.toLowerCase().includes(q) || u.employee_id?.toLowerCase().includes(q);
-      return matchSearch && (statusFilter === 'All' || u.status === statusFilter);
+    return (
+  matchSearch &&
+  (statusFilter === "All" || u.status === statusFilter) &&
+  (departmentFilter === "All" || u.department === departmentFilter) &&
+  (designationFilter === "All" || u.designation === designationFilter) &&
+  (employmentTypeFilter === "All" || u.employment_type === employmentTypeFilter) &&
+  (workTypeFilter === "All" || u.work_type === workTypeFilter) &&
+  (employeeStatusFilter === "All" ||
+ u.employee_status === employeeStatusFilter) &&
+
+(workLocationFilter === "All" ||
+ u.work_location === workLocationFilter) &&
+
+(genderFilter === "All" ||
+ u.gender === genderFilter) &&
+
+(maritalStatusFilter === "All" ||
+ u.marital_status === maritalStatusFilter)
+);
     })
     .sort((a, b) => {
       const av = (a[sortKey] ?? '').toString();
       const bv = (b[sortKey] ?? '').toString();
       return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
     }),
-    [users, search, statusFilter, sortKey, sortDir]
+    [users, search, statusFilter, departmentFilter, designationFilter, employmentTypeFilter, workTypeFilter, sortKey, sortDir]
   );
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -75,19 +104,18 @@ export default function EmployeesPage() {
       <div className="p-4 sm:p-6 space-y-4 page-enter">
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-          <div className="flex flex-1 gap-2 w-full sm:max-w-lg">
-            <div className="relative flex-1">
+          <div className="flex flex-3 gap-2 w-full sm:max-w-2g">
+         <div className="relative w-70">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-slate-500 text-slate-400" />
               <input className="input pl-8 py-2" placeholder="Search name, email, department, ID…"
                 value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
             </div>
-            <div className="relative">
-              <Filter size={13} className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-slate-500 text-slate-400 pointer-events-none" />
-              <select className="input pl-8 pr-8 py-2 appearance-none" value={statusFilter}
-                onChange={e => { setStatusFilter(e.target.value as typeof statusFilter); setPage(1); }}>
-                {STATUSES.map(s => <option key={s} value={s}>{s === 'All' ? 'All Status' : s}</option>)}
-              </select>
-            </div>
+          <button
+  onClick={() => setShowAdvancedFilters(true)}
+  className="px-4 py-2 border rounded-lg bg-white"
+>
+  Advanced Filters
+</button>
           </div>
           <button className="btn-primary shrink-0 w-full sm:w-auto justify-center" onClick={() => navigate("/employees/new")}>
             <Plus size={15} />Add Employee
@@ -128,6 +156,7 @@ export default function EmployeesPage() {
                             {!search && statusFilter === 'All' && (
                               <p className="text-xs dark:text-slate-500 text-slate-400 mt-1">Add your first employee to get started.</p>
                             )}
+
                           </div>
                         </div>
                       </td></tr>
@@ -220,7 +249,185 @@ export default function EmployeesPage() {
           )}
         </div>
       </div>
+<Modal
+  open={showAdvancedFilters}
+  onClose={() => setShowAdvancedFilters(false)}
+  title="Advanced Filters"
+  width="max-w-4xl"
+>
+  <div className="grid grid-cols-2 gap-4">
 
+    <div>
+      <label className="text-sm font-medium">
+        Department
+      </label>
+      <select
+        className="input w-full mt-1"
+        value={departmentFilter}
+        onChange={(e) =>
+          setDepartmentFilter(e.target.value)
+        }
+      >
+        <option value="All">All</option>
+        {[...new Set(users.map(u => u.department))]
+          .filter(Boolean)
+          .map(dep => (
+            <option key={dep} value={dep}>
+              {dep}
+            </option>
+          ))}
+      </select>
+    </div>
+
+    <div>
+      <label className="text-sm font-medium">
+        Designation
+      </label>
+      <select
+        className="input w-full mt-1"
+        value={designationFilter}
+        onChange={(e) =>
+          setDesignationFilter(e.target.value)
+        }
+      >
+        <option value="All">All</option>
+        {[...new Set(users.map(u => u.designation))]
+          .filter(Boolean)
+          .map(des => (
+            <option key={des} value={des}>
+              {des}
+            </option>
+          ))}
+      </select>
+    </div>
+    <div>
+  <label className="text-sm font-medium">
+    Employment Type
+  </label>
+
+  <select
+    className="input w-full mt-1"
+    value={employmentTypeFilter}
+    onChange={(e) =>
+      setEmploymentTypeFilter(e.target.value)
+    }
+  >
+    <option value="All">All</option>
+    <option value="Full Time">Full Time</option>
+    <option value="Part Time">Part Time</option>
+    <option value="Contract">Contract</option>
+    <option value="Intern">Intern</option>
+  </select>
+</div>
+<div>
+  <label className="text-sm font-medium">
+    Work Type
+  </label>
+
+  <select
+    className="input w-full mt-1"
+    value={workTypeFilter}
+    onChange={(e) =>
+      setWorkTypeFilter(e.target.value)
+    }
+  >
+    <option value="All">All</option>
+    <option value="Remote">Remote</option>
+    <option value="Hybrid">Hybrid</option>
+    <option value="Office">Office</option>
+  </select>
+</div>
+
+<div>
+  <label className="text-sm font-medium">
+    Work Location
+  </label>
+
+  <select
+    className="input w-full mt-1"
+    value={workLocationFilter}
+    onChange={(e) =>
+      setWorkLocationFilter(e.target.value)
+    }
+  >
+    <option value="All">All</option>
+
+    {[...new Set(users.map(u => u.work_location))]
+      .filter(Boolean)
+      .map(location => (
+        <option key={location} value={location}>
+          {location}
+        </option>
+      ))}
+  </select>
+</div>
+<div>
+  <label className="text-sm font-medium">
+    Gender
+  </label>
+
+  <select
+    className="input w-full mt-1"
+    value={genderFilter}
+    onChange={(e) =>
+      setGenderFilter(e.target.value)
+    }
+  >
+    <option value="All">All</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+<div>
+  <label className="text-sm font-medium">
+    Marital Status
+  </label>
+
+  <select
+    className="input w-full mt-1"
+    value={maritalStatusFilter}
+    onChange={(e) =>
+      setMaritalStatusFilter(e.target.value)
+    }
+  >
+    <option value="All">All</option>
+    <option value="Single">Single</option>
+    <option value="Married">Married</option>
+    <option value="Divorced">Divorced</option>
+    <option value="Widowed">Widowed</option>
+  </select>
+</div>
+  </div>
+
+  <div className="flex justify-end gap-3 mt-6">
+    <button
+      className="px-4 py-2 border rounded-lg"
+      onClick={() => {
+       setDepartmentFilter("All");
+setDesignationFilter("All");
+setEmploymentTypeFilter("All");
+setWorkTypeFilter("All");
+setWorkLocationFilter("All");
+setGenderFilter("All");
+setMaritalStatusFilter("All");
+setEmployeeStatusFilter("All");
+      }}
+    >
+      Clear
+    </button>
+
+    <button
+      className="btn-primary"
+      onClick={() =>
+        setShowAdvancedFilters(false)
+      }
+    >
+      Apply Filters
+    </button>
+  </div>
+  
+</Modal>
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
